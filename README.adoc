@@ -1,0 +1,10 @@
+= SALES parser
+
+== Run
+
+[source,bash]
+----
+uv run -m sales-parser
+----
+
+Then follow the CLI instructions
