@@ -38,6 +38,7 @@ def fetch(url: str) -> pathlib.Path:
 
 
 def __fetch(url: str, file: pathlib.Path) -> pathlib.Path:
+    print_log("Fetching " + url)
     request = req.Request(url)
 
     with open("AVITO_COOKIE", "r", encoding="UTF-8") as cookie_file:

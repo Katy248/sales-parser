@@ -1,5 +1,5 @@
 import argparse
-import json
+from .utils import to_json
 
 
 def main():
@@ -17,6 +17,11 @@ def main():
         "--pretty", action="store_true", help="Enable JSON pretty print"
     )
     cli_parser.add_argument(
+        "--diff",
+        action="store_true",
+        help="Prints difference between current and previous output, requires Redis",
+    )
+    cli_parser.add_argument(
         "--ensure-ascii",
         action="store_true",
         help="Ensures all symbols encoded as ASCII",
@@ -24,17 +29,41 @@ def main():
 
     args = cli_parser.parse_args()
 
+    if args.diff:
+        print_diff(args)
+    else:
+        print_parsed(args)
+
+
+def print_diff(args: argparse.Namespace):
+    from .parser import get_diff, RedisConfig
+
+    conf = RedisConfig()
+    offers = get_diff(args.url, conf)
+    if args.json:
+        print(
+            to_json(
+                offers,
+                indent=(4 if args.pretty else 0),
+                ensure_ascii=args.ensure_ascii,
+            )
+        )
+
+    else:
+        for o in offers:
+            print(o)
+
+
+def print_parsed(args: argparse.Namespace):
     from .parser import parse
 
     offers = list(parse(args.url))
     if args.json:
-        from .utils import CustomJSONEncoder
 
         print(
-            json.dumps(
+            to_json(
                 offers,
                 indent=(4 if args.pretty else 0),
-                cls=CustomJSONEncoder,
                 ensure_ascii=args.ensure_ascii,
             )
         )

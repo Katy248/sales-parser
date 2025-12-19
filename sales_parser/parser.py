@@ -1,7 +1,9 @@
 from typing import Generator
+import json
 from .page_fetch import fetch
-from .utils import print_error
+from .utils import print_error, to_json
 from bs4 import BeautifulSoup, Tag
+import redis
 
 
 class Offer:
@@ -94,3 +96,48 @@ def parse(url: str) -> Generator[Offer]:
         except Exception as e:
             print_error("Failed parse element: " + str(e) + " Skipping.")
             continue
+
+
+class RedisConfig:
+    hostname = "localhost"
+    port = 6379
+    password: str | None = None
+
+
+def __parse_offers_from_json(json_str: str) -> list[Offer]:
+    offers: list[Offer] = []
+    old_data = json.loads(json_str)
+    for item in old_data:
+        offers.append(
+            Offer(
+                int(item["id"]),
+                item["name"],
+                float(item["price"]),
+                item["priceCurrency"],
+                item["subtitle"],
+            )
+        )
+    return offers
+
+
+def get_diff(url: str, rConf: RedisConfig):
+
+    r = redis.Redis(
+        host=rConf.hostname,
+        password=rConf.password,
+        port=rConf.port,
+        decode_responses=True,
+    )
+    old_data = __parse_offers_from_json(str(r.get(url)))
+
+    new_data = list(parse(url))
+    diffs: list[Offer] = []
+    for item in new_data:
+        contains = (True for i in old_data if i.id == item.id)
+        if contains:
+            continue
+
+        diffs.append(item)
+
+    r.set(url, to_json(new_data))
+    return diffs

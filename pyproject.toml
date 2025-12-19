@@ -5,4 +5,7 @@ description = "Add your description here"
 readme = "README.adoc"
 requires-python = ">=3.13"
 authors = [{ name = 'Katy248', email = '<petrovanton247@gmail.com>' }]
-dependencies = ["beautifulsoup4>=4.14.3"]
+dependencies = [
+    "beautifulsoup4>=4.14.3",
+    "redis>=7.1.0",
+]
