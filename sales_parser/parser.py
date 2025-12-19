@@ -5,14 +5,14 @@ from bs4 import BeautifulSoup, Tag
 
 
 class Offer:
-    id: str
+    id: int
     name: str
     price: float
     priceCurrency: str
     subtitle: str
 
     def __init__(
-        self, id: str, name: str, price: float, priceCurrency: str, subtitle: str
+        self, id: int, name: str, price: float, priceCurrency: str, subtitle: str
     ) -> None:
         self.id = id
         self.name = name
@@ -24,11 +24,11 @@ class Offer:
         return f"{self.name} - {self.price} {self.priceCurrency}"
 
 
-def __get_id__(item: Tag) -> str:
+def __get_id__(item: Tag) -> int:
     id = item.attrs.get("data-item-id")
     if id is None:
         raise Exception("Item has no 'data-item-id' attribute")
-    return str(id)
+    return int(str(id))
 
 
 def __get_name_element__(item: Tag):
