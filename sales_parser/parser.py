@@ -12,15 +12,23 @@ class Offer:
     price: float
     priceCurrency: str
     subtitle: str
+    url: str
 
     def __init__(
-        self, id: int, name: str, price: float, priceCurrency: str, subtitle: str
+        self,
+        id: int,
+        name: str,
+        price: float,
+        priceCurrency: str,
+        subtitle: str,
+        url: str,
     ) -> None:
         self.id = id
         self.name = name
         self.price = price
         self.priceCurrency = priceCurrency
         self.subtitle = subtitle
+        self.url = url
 
     def __str__(self) -> str:
         return f"{self.name} - {self.price} {self.priceCurrency}"
@@ -40,6 +48,14 @@ def __get_name_element__(item: Tag):
             "Item element has no child <a> with attribute [data-marker=item-title]"
         )
     return name_element
+
+
+def __get_url__(item: Tag) -> str:
+    name_element = __get_name_element__(item)
+    href = name_element.attrs.get("href")
+    if href is None:
+        raise Exception("There is no href attribute provided in item")
+    return str(href)
 
 
 def __get_name__(item: Tag) -> str:
@@ -89,8 +105,9 @@ def parse(url: str) -> Generator[Offer]:
             subtitle = __get_title__(item)
             price = __get_price__(item)
             priceCurrency = __get_currency__(item)
+            url = __get_url__(item)
 
-            offer = Offer(id, name, price, priceCurrency, subtitle)
+            offer = Offer(id, name, price, priceCurrency, subtitle, url)
 
             yield offer
         except Exception as e:
@@ -115,6 +132,7 @@ def __parse_offers_from_json(json_str: str) -> list[Offer]:
                 float(item["price"]),
                 item["priceCurrency"],
                 item["subtitle"],
+                item["url"],
             )
         )
     return offers
