@@ -24,18 +24,16 @@ def fetch(url: str) -> pathlib.Path:
 
     file = __url_to_filename(url)
 
-    print_log(str(file))
-    if file.exists():
-        print_log("file exists")
-    else:
+    if not file.exists():
         return __fetch(url, file)
 
     file_last_modified = datetime.datetime.fromtimestamp(file.lstat().st_mtime)
-    print_log(f"last modified: {file_last_modified}")
 
     if datetime.datetime.now() - file_last_modified < __get_cache_expiration_time():
-        print_log("Cached file")
+        print_log("Cached")
         return file.absolute()
+    else:
+        print_log("Cache file expired")
     return __fetch(url, file)
 
 

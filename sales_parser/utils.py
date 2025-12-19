@@ -4,11 +4,11 @@ from datetime import datetime
 
 
 def print_log(message: str):
-    print(message, file=sys.stderr)
+    print("[LOG]", message, file=sys.stderr)
 
 
 def print_error(message: str):
-    print(message, file=sys.stderr)
+    print("[ERROR]", message, file=sys.stderr)
 
 
 class CustomJSONEncoder(json.JSONEncoder):
