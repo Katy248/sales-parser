@@ -26,6 +26,21 @@ def main():
         action="store_true",
         help="Ensures all symbols encoded as ASCII",
     )
+    cli_parser.add_argument(
+        "--redis-hostname",
+        "--hostname",
+        default="localhost",
+        help="Specify redis hostname",
+    )
+    cli_parser.add_argument(
+        "--redis-port",
+        default=6379,
+        help="Specify redis port",
+    )
+    cli_parser.add_argument(
+        "--redis-password",
+        help="Specify redis password",
+    )
 
     args = cli_parser.parse_args()
 
@@ -39,6 +54,10 @@ def print_diff(args: argparse.Namespace):
     from .parser import get_diff, RedisConfig
 
     conf = RedisConfig()
+    conf.hostname = args.redis_hostname
+    conf.port = args.redis_port
+    conf.password = args.redis_password
+
     offers = get_diff(args.url, conf)
     if args.json:
         print(
