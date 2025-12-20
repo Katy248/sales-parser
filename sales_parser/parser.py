@@ -105,9 +105,9 @@ def parse(url: str) -> Generator[Offer]:
             subtitle = __get_title__(item)
             price = __get_price__(item)
             priceCurrency = __get_currency__(item)
-            url = __get_url__(item)
+            offer_url = __get_url__(item)
 
-            offer = Offer(id, name, price, priceCurrency, subtitle, url)
+            offer = Offer(id, name, price, priceCurrency, subtitle, offer_url)
 
             yield offer
         except Exception as e:
