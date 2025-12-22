@@ -127,12 +127,12 @@ def __parse_offers_from_json(json_str: str) -> list[Offer]:
     for item in old_data:
         offers.append(
             Offer(
-                int(item["id"]),
-                item["name"],
-                float(item["price"]),
-                item["priceCurrency"],
-                item["subtitle"],
-                item["url"],
+                int(item.get("id")),
+                item.get("name"),
+                float(item.get("price")),
+                item.get("priceCurrency"),
+                item.get("subtitle"),
+                item.get("url"),
             )
         )
     return offers
