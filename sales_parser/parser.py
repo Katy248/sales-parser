@@ -1,7 +1,7 @@
 from typing import Generator
 import json
 from .page_fetch import fetch
-from .utils import print_error, to_json
+from .utils import print_error, print_log, to_json
 from bs4 import BeautifulSoup, Tag
 import redis
 
@@ -146,6 +146,7 @@ def get_diff(url: str, rConf: RedisConfig):
         port=rConf.port,
         decode_responses=True,
     )
+    print_log("Get parsed cache from redis")
     old_data = __parse_offers_from_json(str(r.get(url)))
 
     new_data = list(parse(url))

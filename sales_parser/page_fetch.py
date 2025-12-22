@@ -30,10 +30,10 @@ def fetch(url: str) -> pathlib.Path:
     file_last_modified = datetime.datetime.fromtimestamp(file.lstat().st_mtime)
 
     if datetime.datetime.now() - file_last_modified < __get_cache_expiration_time():
-        print_log("Cached")
+        print_log("Page cached")
         return file.absolute()
     else:
-        print_log("Cache file expired")
+        print_log("Page cache file expired")
     return __fetch(url, file)
 
 
